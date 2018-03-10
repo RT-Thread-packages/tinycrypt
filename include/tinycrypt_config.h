@@ -38,6 +38,6 @@
 #ifndef TINY_CRYPT_CONFIG_H__
 #define TINY_CRYPT_CONFIG_H__
 
-#include <rtthread.h>
+#include <rtconfig.h>
 
 #endif
