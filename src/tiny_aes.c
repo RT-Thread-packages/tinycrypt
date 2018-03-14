@@ -455,7 +455,7 @@ static void aes_gen_tables(void)
 /*
  * AES key schedule (encryption)
  */
-void aes_setkey_enc(aes_context * ctx, unsigned char *key, int keysize)
+void tiny_aes_setkey_enc(tiny_aes_context * ctx, unsigned char *key, int keysize)
 {
 	int i;
 	unsigned long *RK;
@@ -554,10 +554,10 @@ void aes_setkey_enc(aes_context * ctx, unsigned char *key, int keysize)
 /*
  * AES key schedule (decryption)
  */
-void aes_setkey_dec(aes_context * ctx, unsigned char *key, int keysize)
+void tiny_aes_setkey_dec(tiny_aes_context * ctx, unsigned char *key, int keysize)
 {
 	int i, j;
-	aes_context cty;
+	tiny_aes_context cty;
 	unsigned long *RK;
 	unsigned long *SK;
 
@@ -577,7 +577,7 @@ void aes_setkey_dec(aes_context * ctx, unsigned char *key, int keysize)
 
 	ctx->rk = RK = ctx->buf;
 
-	aes_setkey_enc(&cty, key, keysize);
+	tiny_aes_setkey_enc(&cty, key, keysize);
 	SK = cty.rk + cty.nr * 4;
 
 	*RK++ = *SK++;
@@ -599,7 +599,7 @@ void aes_setkey_dec(aes_context * ctx, unsigned char *key, int keysize)
 	*RK++ = *SK++;
 	*RK++ = *SK++;
 
-	memset(&cty, 0, sizeof(aes_context));
+	memset(&cty, 0, sizeof(tiny_aes_context));
 }
 
 #define AES_FROUND(X0,X1,X2,X3,Y0,Y1,Y2,Y3)     \
@@ -651,7 +651,7 @@ void aes_setkey_dec(aes_context * ctx, unsigned char *key, int keysize)
 /*
  * AES-ECB block encryption/decryption
  */
-void aes_crypt_ecb(aes_context * ctx,
+void tiny_aes_crypt_ecb(tiny_aes_context * ctx,
 		   int mode, unsigned char input[16], unsigned char output[16])
 {
 	int i;
@@ -741,7 +741,7 @@ void aes_crypt_ecb(aes_context * ctx,
 /*
  * AES-CBC buffer encryption/decryption
  */
-void aes_crypt_cbc(aes_context * ctx,
+void tiny_aes_crypt_cbc(tiny_aes_context * ctx,
 		   int mode,
 		   int length,
 		   unsigned char iv[16],
@@ -753,7 +753,7 @@ void aes_crypt_cbc(aes_context * ctx,
 	if (mode == AES_DECRYPT) {
 		while (length > 0) {
 			memcpy(temp, input, 16);
-			aes_crypt_ecb(ctx, mode, input, output);
+			tiny_aes_crypt_ecb(ctx, mode, input, output);
 
 			for (i = 0; i < 16; i++)
 				output[i] = (unsigned char)(output[i] ^ iv[i]);
@@ -769,7 +769,7 @@ void aes_crypt_cbc(aes_context * ctx,
 			for (i = 0; i < 16; i++)
 				output[i] = (unsigned char)(input[i] ^ iv[i]);
 
-			aes_crypt_ecb(ctx, mode, output, output);
+			tiny_aes_crypt_ecb(ctx, mode, output, output);
 			memcpy(iv, output, 16);
 
 			input += 16;
@@ -782,7 +782,7 @@ void aes_crypt_cbc(aes_context * ctx,
 /*
  * AES-CFB128 buffer encryption/decryption
  */
-void aes_crypt_cfb128(aes_context * ctx,
+void tiny_aes_crypt_cfb128(tiny_aes_context * ctx,
 		      int mode,
 		      int length,
 		      int *iv_off,
@@ -794,7 +794,7 @@ void aes_crypt_cfb128(aes_context * ctx,
 	if (mode == AES_DECRYPT) {
 		while (length--) {
 			if (n == 0)
-				aes_crypt_ecb(ctx, AES_ENCRYPT, iv, iv);
+				tiny_aes_crypt_ecb(ctx, AES_ENCRYPT, iv, iv);
 
 			c = *input++;
 			*output++ = (unsigned char)(c ^ iv[n]);
@@ -805,7 +805,7 @@ void aes_crypt_cfb128(aes_context * ctx,
 	} else {
 		while (length--) {
 			if (n == 0)
-				aes_crypt_ecb(ctx, AES_ENCRYPT, iv, iv);
+				tiny_aes_crypt_ecb(ctx, AES_ENCRYPT, iv, iv);
 
 			iv[n] = *output++ = (unsigned char)(iv[n] ^ *input++);
 

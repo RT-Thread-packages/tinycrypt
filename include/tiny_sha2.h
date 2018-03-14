@@ -48,7 +48,7 @@ typedef struct {
 	unsigned char ipad[64];	/*!< HMAC: inner padding        */
 	unsigned char opad[64];	/*!< HMAC: outer padding        */
 	int is224;		/*!< 0 => SHA-256, else SHA-224 */
-} sha2_context;
+} tiny_sha2_context;
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,7 +60,7 @@ extern "C" {
 	 * \param ctx      context to be initialized
 	 * \param is224    0 = use SHA256, 1 = use SHA224
 	 */
-	void sha2_starts(sha2_context * ctx, int is224);
+	void tiny_sha2_starts(tiny_sha2_context * ctx, int is224);
 
 	/**
 	 * \brief          SHA-256 process buffer
@@ -69,7 +69,7 @@ extern "C" {
 	 * \param input    buffer holding the  data
 	 * \param ilen     length of the input data
 	 */
-	void sha2_update(sha2_context * ctx, unsigned char *input, int ilen);
+	void tiny_sha2_update(tiny_sha2_context * ctx, unsigned char *input, int ilen);
 
 	/**
 	 * \brief          SHA-256 final digest
@@ -77,7 +77,7 @@ extern "C" {
 	 * \param ctx      SHA-256 context
 	 * \param output   SHA-224/256 checksum result
 	 */
-	void sha2_finish(sha2_context * ctx, unsigned char output[32]);
+	void tiny_sha2_finish(tiny_sha2_context * ctx, unsigned char output[32]);
 
 	/**
 	 * \brief          Output = SHA-256( input buffer )
@@ -87,7 +87,7 @@ extern "C" {
 	 * \param output   SHA-224/256 checksum result
 	 * \param is224    0 = use SHA256, 1 = use SHA224
 	 */
-	void sha2(unsigned char *input, int ilen,
+	void tiny_sha2(unsigned char *input, int ilen,
 		  unsigned char output[32], int is224);
 
 	/**
@@ -98,7 +98,7 @@ extern "C" {
 	 * \param keylen   length of the HMAC key
 	 * \param is224    0 = use SHA256, 1 = use SHA224
 	 */
-	void sha2_hmac_starts(sha2_context * ctx, unsigned char *key,
+	void tiny_sha2_hmac_starts(tiny_sha2_context * ctx, unsigned char *key,
 			      int keylen, int is224);
 
 	/**
@@ -108,7 +108,7 @@ extern "C" {
 	 * \param input    buffer holding the  data
 	 * \param ilen     length of the input data
 	 */
-	void sha2_hmac_update(sha2_context * ctx, unsigned char *input,
+	void tiny_sha2_hmac_update(tiny_sha2_context * ctx, unsigned char *input,
 			      int ilen);
 
 	/**
@@ -117,7 +117,7 @@ extern "C" {
 	 * \param ctx      HMAC context
 	 * \param output   SHA-224/256 HMAC checksum result
 	 */
-	void sha2_hmac_finish(sha2_context * ctx, unsigned char output[32]);
+	void tiny_sha2_hmac_finish(tiny_sha2_context * ctx, unsigned char output[32]);
 
 	/**
 	 * \brief          Output = HMAC-SHA-256( hmac key, input buffer )
@@ -129,7 +129,7 @@ extern "C" {
 	 * \param output   HMAC-SHA-224/256 result
 	 * \param is224    0 = use SHA256, 1 = use SHA224
 	 */
-	void sha2_hmac(unsigned char *key, int keylen,
+	void tiny_sha2_hmac(unsigned char *key, int keylen,
 		       unsigned char *input, int ilen,
 		       unsigned char output[32], int is224);
 
