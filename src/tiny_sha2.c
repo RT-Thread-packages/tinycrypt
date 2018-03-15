@@ -75,7 +75,7 @@
 /*
  * SHA-256 context setup
  */
-void sha2_starts(sha2_context * ctx, int is224)
+void tiny_sha2_starts(tiny_sha2_context * ctx, int is224)
 {
 	ctx->total[0] = 0;
 	ctx->total[1] = 0;
@@ -105,7 +105,7 @@ void sha2_starts(sha2_context * ctx, int is224)
 	ctx->is224 = is224;
 }
 
-static void sha2_process(sha2_context * ctx, unsigned char data[64])
+static void sha2_process(tiny_sha2_context * ctx, unsigned char data[64])
 {
 	unsigned long temp1, temp2, W[64];
 	unsigned long A, B, C, D, E, F, G, H;
@@ -239,7 +239,7 @@ static void sha2_process(sha2_context * ctx, unsigned char data[64])
 /*
  * SHA-256 process buffer
  */
-void sha2_update(sha2_context * ctx, unsigned char *input, int ilen)
+void tiny_sha2_update(tiny_sha2_context * ctx, unsigned char *input, int ilen)
 {
 	int fill;
 	unsigned long left;
@@ -285,7 +285,7 @@ static const unsigned char sha2_padding[64] = {
 /*
  * SHA-256 final digest
  */
-void sha2_finish(sha2_context * ctx, unsigned char output[32])
+void tiny_sha2_finish(tiny_sha2_context * ctx, unsigned char output[32])
 {
 	unsigned long last, padn;
 	unsigned long high, low;
@@ -301,8 +301,8 @@ void sha2_finish(sha2_context * ctx, unsigned char output[32])
 	last = ctx->total[0] & 0x3F;
 	padn = (last < 56) ? (56 - last) : (120 - last);
 
-	sha2_update(ctx, (unsigned char *)sha2_padding, padn);
-	sha2_update(ctx, msglen, 8);
+	tiny_sha2_update(ctx, (unsigned char *)sha2_padding, padn);
+	tiny_sha2_update(ctx, msglen, 8);
 
 	PUT_ULONG_BE(ctx->state[0], output, 0);
 	PUT_ULONG_BE(ctx->state[1], output, 4);
@@ -319,28 +319,28 @@ void sha2_finish(sha2_context * ctx, unsigned char output[32])
 /*
  * output = SHA-256( input buffer )
  */
-void sha2(unsigned char *input, int ilen, unsigned char output[32], int is224)
+void tiny_sha2(unsigned char *input, int ilen, unsigned char output[32], int is224)
 {
-	sha2_context ctx;
+	tiny_sha2_context ctx;
 
-	sha2_starts(&ctx, is224);
-	sha2_update(&ctx, input, ilen);
-	sha2_finish(&ctx, output);
+	tiny_sha2_starts(&ctx, is224);
+	tiny_sha2_update(&ctx, input, ilen);
+	tiny_sha2_finish(&ctx, output);
 
-	memset(&ctx, 0, sizeof(sha2_context));
+	memset(&ctx, 0, sizeof(tiny_sha2_context));
 }
 
 /*
  * SHA-256 HMAC context setup
  */
-void sha2_hmac_starts(sha2_context * ctx, unsigned char *key, int keylen,
+void tiny_sha2_hmac_starts(tiny_sha2_context * ctx, unsigned char *key, int keylen,
 		      int is224)
 {
 	int i;
 	unsigned char sum[32];
 
 	if (keylen > 64) {
-		sha2(key, keylen, sum, is224);
+		tiny_sha2(key, keylen, sum, is224);
 		keylen = (is224) ? 28 : 32;
 		key = sum;
 	}
@@ -353,8 +353,8 @@ void sha2_hmac_starts(sha2_context * ctx, unsigned char *key, int keylen,
 		ctx->opad[i] = (unsigned char)(ctx->opad[i] ^ key[i]);
 	}
 
-	sha2_starts(ctx, is224);
-	sha2_update(ctx, ctx->ipad, 64);
+	tiny_sha2_starts(ctx, is224);
+	tiny_sha2_update(ctx, ctx->ipad, 64);
 
 	memset(sum, 0, sizeof(sum));
 }
@@ -362,15 +362,15 @@ void sha2_hmac_starts(sha2_context * ctx, unsigned char *key, int keylen,
 /*
  * SHA-256 HMAC process buffer
  */
-void sha2_hmac_update(sha2_context * ctx, unsigned char *input, int ilen)
+void tiny_sha2_hmac_update(tiny_sha2_context * ctx, unsigned char *input, int ilen)
 {
-	sha2_update(ctx, input, ilen);
+	tiny_sha2_update(ctx, input, ilen);
 }
 
 /*
  * SHA-256 HMAC final digest
  */
-void sha2_hmac_finish(sha2_context * ctx, unsigned char output[32])
+void tiny_sha2_hmac_finish(tiny_sha2_context * ctx, unsigned char output[32])
 {
 	int is224, hlen;
 	unsigned char tmpbuf[32];
@@ -378,11 +378,11 @@ void sha2_hmac_finish(sha2_context * ctx, unsigned char output[32])
 	is224 = ctx->is224;
 	hlen = (is224 == 0) ? 32 : 28;
 
-	sha2_finish(ctx, tmpbuf);
-	sha2_starts(ctx, is224);
-	sha2_update(ctx, ctx->opad, 64);
-	sha2_update(ctx, tmpbuf, hlen);
-	sha2_finish(ctx, output);
+	tiny_sha2_finish(ctx, tmpbuf);
+	tiny_sha2_starts(ctx, is224);
+	tiny_sha2_update(ctx, ctx->opad, 64);
+	tiny_sha2_update(ctx, tmpbuf, hlen);
+	tiny_sha2_finish(ctx, output);
 
 	memset(tmpbuf, 0, sizeof(tmpbuf));
 }
@@ -390,17 +390,17 @@ void sha2_hmac_finish(sha2_context * ctx, unsigned char output[32])
 /*
  * output = HMAC-SHA-256( hmac key, input buffer )
  */
-void sha2_hmac(unsigned char *key, int keylen,
+void tiny_sha2_hmac(unsigned char *key, int keylen,
 	       unsigned char *input, int ilen,
 	       unsigned char output[32], int is224)
 {
-	sha2_context ctx;
+	tiny_sha2_context ctx;
 
-	sha2_hmac_starts(&ctx, key, keylen, is224);
-	sha2_hmac_update(&ctx, input, ilen);
-	sha2_hmac_finish(&ctx, output);
+	tiny_sha2_hmac_starts(&ctx, key, keylen, is224);
+	tiny_sha2_hmac_update(&ctx, input, ilen);
+	tiny_sha2_hmac_finish(&ctx, output);
 
-	memset(&ctx, 0, sizeof(sha2_context));
+	memset(&ctx, 0, sizeof(tiny_sha2_context));
 }
 
 #endif

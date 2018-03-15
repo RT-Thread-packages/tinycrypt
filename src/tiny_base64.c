@@ -70,7 +70,7 @@ static const unsigned char base64_dec_map[128] = {
 /*
  * Encode a buffer into base64 format
  */
-int base64_encode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
+int tiny_base64_encode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
 {
 	int i, n;
 	int C1, C2, C3;
@@ -134,7 +134,7 @@ int base64_encode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
 /*
  * Decode a base64-formatted buffer
  */
-int base64_decode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
+int tiny_base64_decode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
 {
 	int i, j, n;
 	unsigned long x;

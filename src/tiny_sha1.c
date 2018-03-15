@@ -75,7 +75,7 @@
 /*
  * SHA-1 context setup
  */
-void sha1_starts(sha1_context * ctx)
+void tiny_sha1_starts(tiny_sha1_context * ctx)
 {
 	ctx->total[0] = 0;
 	ctx->total[1] = 0;
@@ -87,7 +87,7 @@ void sha1_starts(sha1_context * ctx)
 	ctx->state[4] = 0xC3D2E1F0;
 }
 
-static void sha1_process(sha1_context * ctx, unsigned char data[64])
+static void sha1_process(tiny_sha1_context * ctx, unsigned char data[64])
 {
 	unsigned long temp, W[16], A, B, C, D, E;
 
@@ -246,7 +246,7 @@ static void sha1_process(sha1_context * ctx, unsigned char data[64])
 /*
  * SHA-1 process buffer
  */
-void sha1_update(sha1_context * ctx, unsigned char *input, int ilen)
+void tiny_sha1_update(tiny_sha1_context * ctx, unsigned char *input, int ilen)
 {
 	int fill;
 	unsigned long left;
@@ -292,7 +292,7 @@ static const unsigned char sha1_padding[64] = {
 /*
  * SHA-1 final digest
  */
-void sha1_finish(sha1_context * ctx, unsigned char output[20])
+void tiny_sha1_finish(tiny_sha1_context * ctx, unsigned char output[20])
 {
 	unsigned long last, padn;
 	unsigned long high, low;
@@ -308,8 +308,8 @@ void sha1_finish(sha1_context * ctx, unsigned char output[20])
 	last = ctx->total[0] & 0x3F;
 	padn = (last < 56) ? (56 - last) : (120 - last);
 
-	sha1_update(ctx, (unsigned char *)sha1_padding, padn);
-	sha1_update(ctx, msglen, 8);
+	tiny_sha1_update(ctx, (unsigned char *)sha1_padding, padn);
+	tiny_sha1_update(ctx, msglen, 8);
 
 	PUT_ULONG_BE(ctx->state[0], output, 0);
 	PUT_ULONG_BE(ctx->state[1], output, 4);
@@ -321,27 +321,27 @@ void sha1_finish(sha1_context * ctx, unsigned char output[20])
 /*
  * output = SHA-1( input buffer )
  */
-void sha1(unsigned char *input, int ilen, unsigned char output[20])
+void tiny_sha1(unsigned char *input, int ilen, unsigned char output[20])
 {
-	sha1_context ctx;
+	tiny_sha1_context ctx;
 
-	sha1_starts(&ctx);
-	sha1_update(&ctx, input, ilen);
-	sha1_finish(&ctx, output);
+	tiny_sha1_starts(&ctx);
+	tiny_sha1_update(&ctx, input, ilen);
+	tiny_sha1_finish(&ctx, output);
 
-	memset(&ctx, 0, sizeof(sha1_context));
+	memset(&ctx, 0, sizeof(tiny_sha1_context));
 }
 
 /*
  * SHA-1 HMAC context setup
  */
-void sha1_hmac_starts(sha1_context * ctx, unsigned char *key, int keylen)
+void tiny_sha1_hmac_starts(tiny_sha1_context * ctx, unsigned char *key, int keylen)
 {
 	int i;
 	unsigned char sum[20];
 
 	if (keylen > 64) {
-		sha1(key, keylen, sum);
+		tiny_sha1(key, keylen, sum);
 		keylen = 20;
 		key = sum;
 	}
@@ -354,8 +354,8 @@ void sha1_hmac_starts(sha1_context * ctx, unsigned char *key, int keylen)
 		ctx->opad[i] = (unsigned char)(ctx->opad[i] ^ key[i]);
 	}
 
-	sha1_starts(ctx);
-	sha1_update(ctx, ctx->ipad, 64);
+	tiny_sha1_starts(ctx);
+	tiny_sha1_update(ctx, ctx->ipad, 64);
 
 	memset(sum, 0, sizeof(sum));
 }
@@ -363,23 +363,23 @@ void sha1_hmac_starts(sha1_context * ctx, unsigned char *key, int keylen)
 /*
  * SHA-1 HMAC process buffer
  */
-void sha1_hmac_update(sha1_context * ctx, unsigned char *input, int ilen)
+void tiny_sha1_hmac_update(tiny_sha1_context * ctx, unsigned char *input, int ilen)
 {
-	sha1_update(ctx, input, ilen);
+	tiny_sha1_update(ctx, input, ilen);
 }
 
 /*
  * SHA-1 HMAC final digest
  */
-void sha1_hmac_finish(sha1_context * ctx, unsigned char output[20])
+void tiny_sha1_hmac_finish(tiny_sha1_context * ctx, unsigned char output[20])
 {
 	unsigned char tmpbuf[20];
 
-	sha1_finish(ctx, tmpbuf);
-	sha1_starts(ctx);
-	sha1_update(ctx, ctx->opad, 64);
-	sha1_update(ctx, tmpbuf, 20);
-	sha1_finish(ctx, output);
+	tiny_sha1_finish(ctx, tmpbuf);
+	tiny_sha1_starts(ctx);
+	tiny_sha1_update(ctx, ctx->opad, 64);
+	tiny_sha1_update(ctx, tmpbuf, 20);
+	tiny_sha1_finish(ctx, output);
 
 	memset(tmpbuf, 0, sizeof(tmpbuf));
 }
@@ -387,16 +387,16 @@ void sha1_hmac_finish(sha1_context * ctx, unsigned char output[20])
 /*
  * output = HMAC-SHA-1( hmac key, input buffer )
  */
-void sha1_hmac(unsigned char *key, int keylen,
+void tiny_sha1_hmac(unsigned char *key, int keylen,
 	       unsigned char *input, int ilen, unsigned char output[20])
 {
-	sha1_context ctx;
+	tiny_sha1_context ctx;
 
-	sha1_hmac_starts(&ctx, key, keylen);
-	sha1_hmac_update(&ctx, input, ilen);
-	sha1_hmac_finish(&ctx, output);
+	tiny_sha1_hmac_starts(&ctx, key, keylen);
+	tiny_sha1_hmac_update(&ctx, input, ilen);
+	tiny_sha1_hmac_finish(&ctx, output);
 
-	memset(&ctx, 0, sizeof(sha1_context));
+	memset(&ctx, 0, sizeof(tiny_sha1_context));
 }
 
 #endif

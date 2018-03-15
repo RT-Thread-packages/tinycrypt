@@ -39,23 +39,23 @@
 #define TINY_CRYPT_H__
 
 #ifdef TINY_CRYPT_MD5
-#include "md5.h"
+#include "tiny_md5.h"
 #endif
 
 #ifdef TINY_CRYPT_AES
-#include "aes.h"
+#include "tiny_aes.h"
 #endif
 
 #ifdef TINY_CRYPT_SHA1
-#include "sha1.h"
+#include "tiny_sha1.h"
 #endif
 
 #ifdef TINY_CRYPT_SHA256
-#include "sha2.h"
+#include "tiny_sha2.h"
 #endif
 
 #ifdef TINY_CRYPT_BASE64
-#include "base64.h"
+#include "tiny_base64.h"
 #endif
 
 #endif
