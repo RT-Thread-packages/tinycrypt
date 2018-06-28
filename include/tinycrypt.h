@@ -58,4 +58,8 @@
 #include "tiny_base64.h"
 #endif
 
+#ifdef TINY_CRYPT_DES
+#include "tiny_des.h"
+#endif
+
 #endif
