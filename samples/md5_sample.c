@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2006-2019, RT-Thread Development Team
+ * Copyright (c) 2006-2021, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Change Logs:
  * Date           Author       Notes
- * 2019-03-22     MurphyZhao   the first version
+ * 2021-07-26     WangQiang    the first version
  */
 
 #include <rtthread.h>
