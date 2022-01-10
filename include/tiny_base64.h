@@ -2,7 +2,7 @@
  * \file base64.h
  *
  *  Based on TropicSSL: Copyright (C) 2017 Shanghai Real-Thread Technology Co., Ltd
- * 
+ *
  *  Based on XySSL: Copyright (C) 2006-2008  Christophe Devine
  *
  *  Copyright (C) 2009  Paul Bakker <polarssl_maintainer at polarssl dot org>
@@ -44,44 +44,44 @@
 extern "C" {
 #endif
 
-	/**
-	 * \brief          Encode a buffer into base64 format
-	 *
-	 * \param dst      destination buffer
-	 * \param dlen     size of the buffer
-	 * \param src      source buffer
-	 * \param slen     amount of data to be encoded
-	 *
-	 * \return         0 if successful, or TROPICSSL_ERR_BASE64_BUFFER_TOO_SMALL.
-	 *                 *dlen is always updated to reflect the amount
-	 *                 of data that has (or would have) been written.
-	 *
-	 * \note           Call this function with *dlen = 0 to obtain the
-	 *                 required buffer size in *dlen
-	 */
-	int tiny_base64_encode(unsigned char *dst, int *dlen,
-			  unsigned char *src, int slen);
+    /**
+     * \brief          Encode a buffer into base64 format
+     *
+     * \param dst      destination buffer
+     * \param dlen     size of the buffer
+     * \param src      source buffer
+     * \param slen     amount of data to be encoded
+     *
+     * \return         0 if successful, or TROPICSSL_ERR_BASE64_BUFFER_TOO_SMALL.
+     *                 *dlen is always updated to reflect the amount
+     *                 of data that has (or would have) been written.
+     *
+     * \note           Call this function with *dlen = 0 to obtain the
+     *                 required buffer size in *dlen
+     */
+    int tiny_base64_encode(unsigned char *dst, int *dlen,
+              unsigned char *src, int slen);
 
-	/**
-	 * \brief          Decode a base64-formatted buffer
-	 *
-	 * \param dst      destination buffer
-	 * \param dlen     size of the buffer
-	 * \param src      source buffer
-	 * \param slen     amount of data to be decoded
-	 *
-	 * \return         0 if successful, TROPICSSL_ERR_BASE64_BUFFER_TOO_SMALL, or
-	 *                 TROPICSSL_ERR_BASE64_INVALID_DATA if the input data is not
-	 *                 correct. *dlen is always updated to reflect the amount
-	 *                 of data that has (or would have) been written.
-	 *
-	 * \note           Call this function with *dlen = 0 to obtain the
-	 *                 required buffer size in *dlen
-	 */
-	int tiny_base64_decode(unsigned char *dst, int *dlen,
-			  unsigned char *src, int slen);
+    /**
+     * \brief          Decode a base64-formatted buffer
+     *
+     * \param dst      destination buffer
+     * \param dlen     size of the buffer
+     * \param src      source buffer
+     * \param slen     amount of data to be decoded
+     *
+     * \return         0 if successful, TROPICSSL_ERR_BASE64_BUFFER_TOO_SMALL, or
+     *                 TROPICSSL_ERR_BASE64_INVALID_DATA if the input data is not
+     *                 correct. *dlen is always updated to reflect the amount
+     *                 of data that has (or would have) been written.
+     *
+     * \note           Call this function with *dlen = 0 to obtain the
+     *                 required buffer size in *dlen
+     */
+    int tiny_base64_decode(unsigned char *dst, int *dlen,
+              unsigned char *src, int slen);
 
 #ifdef __cplusplus
 }
 #endif
-#endif				/* base64.h */
+#endif              /* base64.h */

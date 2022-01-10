@@ -2,7 +2,7 @@
  * \file aes.h
  *
  *  Based on TropicSSL: Copyright (C) 2017 Shanghai Real-Thread Technology Co., Ltd
- * 
+ *
  *  Based on XySSL: Copyright (C) 2006-2008  Christophe Devine
  *
  *  Copyright (C) 2009  Paul Bakker <polarssl_maintainer at polarssl dot org>
@@ -44,80 +44,80 @@
  * \brief          AES context structure
  */
 typedef struct {
-	int nr;			/*!<  number of rounds  */
-	unsigned long *rk;	/*!<  AES round keys    */
-	unsigned long buf[68];	/*!<  unaligned data    */
+    int nr;         /*!<  number of rounds  */
+    unsigned long *rk;  /*!<  AES round keys    */
+    unsigned long buf[68];  /*!<  unaligned data    */
 } tiny_aes_context;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	/**
-	 * \brief          AES key schedule (encryption)
-	 *
-	 * \param ctx      AES context to be initialized
-	 * \param key      encryption key
-	 * \param keysize  must be 128, 192 or 256
-	 */
-	void tiny_aes_setkey_enc(tiny_aes_context * ctx, unsigned char *key, int keysize);
+    /**
+     * \brief          AES key schedule (encryption)
+     *
+     * \param ctx      AES context to be initialized
+     * \param key      encryption key
+     * \param keysize  must be 128, 192 or 256
+     */
+    void tiny_aes_setkey_enc(tiny_aes_context * ctx, unsigned char *key, int keysize);
 
-	/**
-	 * \brief          AES key schedule (decryption)
-	 *
-	 * \param ctx      AES context to be initialized
-	 * \param key      decryption key
-	 * \param keysize  must be 128, 192 or 256
-	 */
-	void tiny_aes_setkey_dec(tiny_aes_context * ctx, unsigned char *key, int keysize);
+    /**
+     * \brief          AES key schedule (decryption)
+     *
+     * \param ctx      AES context to be initialized
+     * \param key      decryption key
+     * \param keysize  must be 128, 192 or 256
+     */
+    void tiny_aes_setkey_dec(tiny_aes_context * ctx, unsigned char *key, int keysize);
 
-	/**
-	 * \brief          AES-ECB block encryption/decryption
-	 *
-	 * \param ctx      AES context
-	 * \param mode     AES_ENCRYPT or AES_DECRYPT
-	 * \param input    16-byte input block
-	 * \param output   16-byte output block
-	 */
-	void tiny_aes_crypt_ecb(tiny_aes_context * ctx,
-			   int mode,
-			   unsigned char input[16], unsigned char output[16]);
+    /**
+     * \brief          AES-ECB block encryption/decryption
+     *
+     * \param ctx      AES context
+     * \param mode     AES_ENCRYPT or AES_DECRYPT
+     * \param input    16-byte input block
+     * \param output   16-byte output block
+     */
+    void tiny_aes_crypt_ecb(tiny_aes_context * ctx,
+               int mode,
+               unsigned char input[16], unsigned char output[16]);
 
-	/**
-	 * \brief          AES-CBC buffer encryption/decryption
-	 *
-	 * \param ctx      AES context
-	 * \param mode     AES_ENCRYPT or AES_DECRYPT
-	 * \param length   length of the input data
-	 * \param iv       initialization vector (updated after use)
-	 * \param input    buffer holding the input data
-	 * \param output   buffer holding the output data
-	 */
-	void tiny_aes_crypt_cbc(tiny_aes_context * ctx,
-			   int mode,
-			   int length,
-			   unsigned char iv[16],
-			   unsigned char *input, unsigned char *output);
+    /**
+     * \brief          AES-CBC buffer encryption/decryption
+     *
+     * \param ctx      AES context
+     * \param mode     AES_ENCRYPT or AES_DECRYPT
+     * \param length   length of the input data
+     * \param iv       initialization vector (updated after use)
+     * \param input    buffer holding the input data
+     * \param output   buffer holding the output data
+     */
+    void tiny_aes_crypt_cbc(tiny_aes_context * ctx,
+               int mode,
+               int length,
+               unsigned char iv[16],
+               unsigned char *input, unsigned char *output);
 
-	/**
-	 * \brief          AES-CFB128 buffer encryption/decryption
-	 *
-	 * \param ctx      AES context
-	 * \param mode     AES_ENCRYPT or AES_DECRYPT
-	 * \param length   length of the input data
-	 * \param iv_off   offset in IV (updated after use)
-	 * \param iv       initialization vector (updated after use)
-	 * \param input    buffer holding the input data
-	 * \param output   buffer holding the output data
-	 */
-	void tiny_aes_crypt_cfb128(tiny_aes_context * ctx,
-			      int mode,
-			      int length,
-			      int *iv_off,
-			      unsigned char iv[16],
-			      unsigned char *input, unsigned char *output);
+    /**
+     * \brief          AES-CFB128 buffer encryption/decryption
+     *
+     * \param ctx      AES context
+     * \param mode     AES_ENCRYPT or AES_DECRYPT
+     * \param length   length of the input data
+     * \param iv_off   offset in IV (updated after use)
+     * \param iv       initialization vector (updated after use)
+     * \param input    buffer holding the input data
+     * \param output   buffer holding the output data
+     */
+    void tiny_aes_crypt_cfb128(tiny_aes_context * ctx,
+                  int mode,
+                  int length,
+                  int *iv_off,
+                  unsigned char iv[16],
+                  unsigned char *input, unsigned char *output);
 
 #ifdef __cplusplus
 }
 #endif
-#endif				/* aes.h */
+#endif              /* aes.h */
