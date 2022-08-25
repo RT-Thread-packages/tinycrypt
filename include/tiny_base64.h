@@ -59,8 +59,8 @@ extern "C" {
      * \note           Call this function with *dlen = 0 to obtain the
      *                 required buffer size in *dlen
      */
-    int tiny_base64_encode(unsigned char *dst, int *dlen,
-              unsigned char *src, int slen);
+    int tiny_base64_encode(uint8_t *dst, int *dlen,
+              uint8_t *src, int slen);
 
     /**
      * \brief          Decode a base64-formatted buffer
@@ -78,8 +78,8 @@ extern "C" {
      * \note           Call this function with *dlen = 0 to obtain the
      *                 required buffer size in *dlen
      */
-    int tiny_base64_decode(unsigned char *dst, int *dlen,
-              unsigned char *src, int slen);
+    int tiny_base64_decode(uint8_t *dst, int *dlen,
+              uint8_t *src, int slen);
 
 #ifdef __cplusplus
 }

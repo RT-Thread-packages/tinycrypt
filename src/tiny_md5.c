@@ -55,20 +55,20 @@
 #ifndef GET_ULONG_LE
 #define GET_ULONG_LE(n,b,i)                             \
     {                                                   \
-        (n) = ( (unsigned long) (b)[(i)    ]       )    \
-            | ( (unsigned long) (b)[(i) + 1] <<  8 )    \
-            | ( (unsigned long) (b)[(i) + 2] << 16 )    \
-            | ( (unsigned long) (b)[(i) + 3] << 24 );   \
+        (n) = ( (uint32_t) (b)[(i)    ]       )    \
+            | ( (uint32_t) (b)[(i) + 1] <<  8 )    \
+            | ( (uint32_t) (b)[(i) + 2] << 16 )    \
+            | ( (uint32_t) (b)[(i) + 3] << 24 );   \
     }
 #endif
 
 #ifndef PUT_ULONG_LE
 #define PUT_ULONG_LE(n,b,i)                             \
     {                                                   \
-        (b)[(i)    ] = (unsigned char) ( (n)       );   \
-        (b)[(i) + 1] = (unsigned char) ( (n) >>  8 );   \
-        (b)[(i) + 2] = (unsigned char) ( (n) >> 16 );   \
-        (b)[(i) + 3] = (unsigned char) ( (n) >> 24 );   \
+        (b)[(i)    ] = (uint8_t) ( (n)       );   \
+        (b)[(i) + 1] = (uint8_t) ( (n) >>  8 );   \
+        (b)[(i) + 2] = (uint8_t) ( (n) >> 16 );   \
+        (b)[(i) + 3] = (uint8_t) ( (n) >> 24 );   \
     }
 #endif
 
@@ -86,9 +86,9 @@ void tiny_md5_starts(tiny_md5_context * ctx)
     ctx->state[3] = 0x10325476;
 }
 
-static void md5_process(tiny_md5_context * ctx, unsigned char data[64])
+static void md5_process(tiny_md5_context * ctx, uint8_t data[64])
 {
-    unsigned long X[16], A, B, C, D;
+    uint32_t X[16], A, B, C, D;
 
     GET_ULONG_LE(X[0], data, 0);
     GET_ULONG_LE(X[1], data, 4);
@@ -212,10 +212,10 @@ static void md5_process(tiny_md5_context * ctx, unsigned char data[64])
 /*
  * MD5 process buffer
  */
-void tiny_md5_update(tiny_md5_context * ctx, unsigned char *input, int ilen)
+void tiny_md5_update(tiny_md5_context * ctx, uint8_t *input, int ilen)
 {
     int fill;
-    unsigned long left;
+    uint32_t left;
 
     if (ilen <= 0)
         return;
@@ -226,7 +226,7 @@ void tiny_md5_update(tiny_md5_context * ctx, unsigned char *input, int ilen)
     ctx->total[0] += ilen;
     ctx->total[0] &= 0xFFFFFFFF;
 
-    if (ctx->total[0] < (unsigned long)ilen)
+    if (ctx->total[0] < (uint32_t)ilen)
         ctx->total[1]++;
 
     if (left && ilen >= fill) {
@@ -248,7 +248,7 @@ void tiny_md5_update(tiny_md5_context * ctx, unsigned char *input, int ilen)
     }
 }
 
-static const unsigned char md5_padding[64] = {
+static const uint8_t md5_padding[64] = {
     0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -258,11 +258,11 @@ static const unsigned char md5_padding[64] = {
 /*
  * MD5 final digest
  */
-void tiny_md5_finish(tiny_md5_context * ctx, unsigned char output[16])
+void tiny_md5_finish(tiny_md5_context * ctx, uint8_t output[16])
 {
-    unsigned long last, padn;
-    unsigned long high, low;
-    unsigned char msglen[8];
+    uint32_t last, padn;
+    uint32_t high, low;
+    uint8_t msglen[8];
 
     high = (ctx->total[0] >> 29)
         | (ctx->total[1] << 3);
@@ -274,7 +274,7 @@ void tiny_md5_finish(tiny_md5_context * ctx, unsigned char output[16])
     last = ctx->total[0] & 0x3F;
     padn = (last < 56) ? (56 - last) : (120 - last);
 
-    tiny_md5_update(ctx, (unsigned char *)md5_padding, padn);
+    tiny_md5_update(ctx, (uint8_t *)md5_padding, padn);
     tiny_md5_update(ctx, msglen, 8);
 
     PUT_ULONG_LE(ctx->state[0], output, 0);
@@ -286,7 +286,7 @@ void tiny_md5_finish(tiny_md5_context * ctx, unsigned char output[16])
 /*
  * output = MD5( input buffer )
  */
-void tiny_md5(unsigned char *input, int ilen, unsigned char output[16])
+void tiny_md5(uint8_t *input, int ilen, uint8_t output[16])
 {
     tiny_md5_context ctx;
 
@@ -300,10 +300,10 @@ void tiny_md5(unsigned char *input, int ilen, unsigned char output[16])
 /*
  * MD5 HMAC context setup
  */
-void tiny_md5_hmac_starts(tiny_md5_context * ctx, unsigned char *key, int keylen)
+void tiny_md5_hmac_starts(tiny_md5_context * ctx, uint8_t *key, int keylen)
 {
     int i;
-    unsigned char sum[16];
+    uint8_t sum[16];
 
     if (keylen > 64) {
         tiny_md5(key, keylen, sum);
@@ -315,8 +315,8 @@ void tiny_md5_hmac_starts(tiny_md5_context * ctx, unsigned char *key, int keylen
     memset(ctx->opad, 0x5C, 64);
 
     for (i = 0; i < keylen; i++) {
-        ctx->ipad[i] = (unsigned char)(ctx->ipad[i] ^ key[i]);
-        ctx->opad[i] = (unsigned char)(ctx->opad[i] ^ key[i]);
+        ctx->ipad[i] = (uint8_t)(ctx->ipad[i] ^ key[i]);
+        ctx->opad[i] = (uint8_t)(ctx->opad[i] ^ key[i]);
     }
 
     tiny_md5_starts(ctx);
@@ -328,7 +328,7 @@ void tiny_md5_hmac_starts(tiny_md5_context * ctx, unsigned char *key, int keylen
 /*
  * MD5 HMAC process buffer
  */
-void tiny_md5_hmac_update(tiny_md5_context * ctx, unsigned char *input, int ilen)
+void tiny_md5_hmac_update(tiny_md5_context * ctx, uint8_t *input, int ilen)
 {
     tiny_md5_update(ctx, input, ilen);
 }
@@ -336,9 +336,9 @@ void tiny_md5_hmac_update(tiny_md5_context * ctx, unsigned char *input, int ilen
 /*
  * MD5 HMAC final digest
  */
-void tiny_md5_hmac_finish(tiny_md5_context * ctx, unsigned char output[16])
+void tiny_md5_hmac_finish(tiny_md5_context * ctx, uint8_t output[16])
 {
-    unsigned char tmpbuf[16];
+    uint8_t tmpbuf[16];
 
     tiny_md5_finish(ctx, tmpbuf);
     tiny_md5_starts(ctx);
@@ -352,8 +352,8 @@ void tiny_md5_hmac_finish(tiny_md5_context * ctx, unsigned char output[16])
 /*
  * output = HMAC-MD5( hmac key, input buffer )
  */
-void tiny_md5_hmac(unsigned char *key, int keylen, unsigned char *input, int ilen,
-          unsigned char output[16])
+void tiny_md5_hmac(uint8_t *key, int keylen, uint8_t *input, int ilen,
+          uint8_t output[16])
 {
     tiny_md5_context ctx;
 
