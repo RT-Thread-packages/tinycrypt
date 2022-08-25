@@ -13,7 +13,7 @@
 #include <tiny_md5.h>
 
 
-static const unsigned char md5_test_buf[7][81] =
+static const uint8_t md5_test_buf[7][81] =
 {
     { "" },
     { "a" },
@@ -30,7 +30,7 @@ static const size_t md5_test_buflen[7] =
     0, 1, 3, 14, 26, 62, 80
 };
 
-static const unsigned char md5_test_sum[7][16] =
+static const uint8_t md5_test_sum[7][16] =
 {
     { 0xD4, 0x1D, 0x8C, 0xD9, 0x8F, 0x00, 0xB2, 0x04,
       0xE9, 0x80, 0x09, 0x98, 0xEC, 0xF8, 0x42, 0x7E },
@@ -51,7 +51,7 @@ static const unsigned char md5_test_sum[7][16] =
 static rt_err_t test_tiny_md5(void)
 {
     int i, ret = 0;
-    unsigned char md5sum[16];
+    uint8_t md5sum[16];
 
     for (i = 0; i < 7; i++)
     {

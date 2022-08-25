@@ -45,8 +45,8 @@
  */
 typedef struct {
     int nr;         /*!<  number of rounds  */
-    unsigned long *rk;  /*!<  AES round keys    */
-    unsigned long buf[68];  /*!<  unaligned data    */
+    uint32_t *rk;  /*!<  AES round keys    */
+    uint32_t buf[68];  /*!<  unaligned data    */
 } tiny_aes_context;
 
 #ifdef __cplusplus
@@ -60,7 +60,7 @@ extern "C" {
      * \param key      encryption key
      * \param keysize  must be 128, 192 or 256
      */
-    void tiny_aes_setkey_enc(tiny_aes_context * ctx, unsigned char *key, int keysize);
+    void tiny_aes_setkey_enc(tiny_aes_context * ctx, uint8_t *key, int keysize);
 
     /**
      * \brief          AES key schedule (decryption)
@@ -69,7 +69,7 @@ extern "C" {
      * \param key      decryption key
      * \param keysize  must be 128, 192 or 256
      */
-    void tiny_aes_setkey_dec(tiny_aes_context * ctx, unsigned char *key, int keysize);
+    void tiny_aes_setkey_dec(tiny_aes_context * ctx, uint8_t *key, int keysize);
 
     /**
      * \brief          AES-ECB block encryption/decryption
@@ -81,7 +81,7 @@ extern "C" {
      */
     void tiny_aes_crypt_ecb(tiny_aes_context * ctx,
                int mode,
-               unsigned char input[16], unsigned char output[16]);
+               uint8_t input[16], uint8_t output[16]);
 
     /**
      * \brief          AES-CBC buffer encryption/decryption
@@ -96,8 +96,8 @@ extern "C" {
     void tiny_aes_crypt_cbc(tiny_aes_context * ctx,
                int mode,
                int length,
-               unsigned char iv[16],
-               unsigned char *input, unsigned char *output);
+               uint8_t iv[16],
+               uint8_t *input, uint8_t *output);
 
     /**
      * \brief          AES-CFB128 buffer encryption/decryption
@@ -114,8 +114,8 @@ extern "C" {
                   int mode,
                   int length,
                   int *iv_off,
-                  unsigned char iv[16],
-                  unsigned char *input, unsigned char *output);
+                  uint8_t iv[16],
+                  uint8_t *input, uint8_t *output);
 
 #ifdef __cplusplus
 }

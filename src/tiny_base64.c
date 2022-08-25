@@ -41,7 +41,7 @@
 
 #include "tinycrypt.h"
 
-static const unsigned char base64_enc_map[64] = {
+static const uint8_t base64_enc_map[64] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
     'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
@@ -51,7 +51,7 @@ static const unsigned char base64_enc_map[64] = {
     '8', '9', '+', '/'
 };
 
-static const unsigned char base64_dec_map[128] = {
+static const uint8_t base64_dec_map[128] = {
     127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
     127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
     127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
@@ -70,11 +70,11 @@ static const unsigned char base64_dec_map[128] = {
 /*
  * Encode a buffer into base64 format
  */
-int tiny_base64_encode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
+int tiny_base64_encode(uint8_t *dst, int *dlen, uint8_t *src, int slen)
 {
     int i, n;
     int C1, C2, C3;
-    unsigned char *p;
+    uint8_t *p;
 
     if (slen == 0)
         return (0);
@@ -134,11 +134,11 @@ int tiny_base64_encode(unsigned char *dst, int *dlen, unsigned char *src, int sl
 /*
  * Decode a base64-formatted buffer
  */
-int tiny_base64_decode(unsigned char *dst, int *dlen, unsigned char *src, int slen)
+int tiny_base64_decode(uint8_t *dst, int *dlen, uint8_t *src, int slen)
 {
     int i, j, n;
-    unsigned long x;
-    unsigned char *p;
+    uint32_t x;
+    uint8_t *p;
 
     for (i = j = n = 0; i < slen; i++) {
         if ((slen - i) >= 2 && src[i] == '\r' && src[i + 1] == '\n')
@@ -179,11 +179,11 @@ int tiny_base64_decode(unsigned char *dst, int *dlen, unsigned char *src, int sl
         if (++n == 4) {
             n = 0;
             if (j > 0)
-                *p++ = (unsigned char)(x >> 16);
+                *p++ = (uint8_t)(x >> 16);
             if (j > 1)
-                *p++ = (unsigned char)(x >> 8);
+                *p++ = (uint8_t)(x >> 8);
             if (j > 2)
-                *p++ = (unsigned char)(x);
+                *p++ = (uint8_t)(x);
         }
     }
 

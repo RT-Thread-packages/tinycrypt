@@ -21,9 +21,9 @@ static rt_err_t test_tiny_aes(void)
     uint8_t iv[16 + 1];
     uint8_t private_key[32 + 1];
 
-    unsigned char data[] = "1234567890123456";
-    unsigned char data_encrypt[32];
-    unsigned char data_decrypt[32];
+    uint8_t data[] = "1234567890123456";
+    uint8_t data_encrypt[32];
+    uint8_t data_decrypt[32];
 
     /* encrypt */
     rt_memcpy(iv, TEST_TINY_AES_IV, rt_strlen(TEST_TINY_AES_IV));
